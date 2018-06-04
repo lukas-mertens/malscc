@@ -210,8 +210,9 @@ function updateShownImages() {
 function getImagesWithAttribute(attribute, no_pdf_thumbnails = false) {
     var tempImages = [];
     images.forEach(image => {
-        if(image.attribute === attribute && !(no_pdf_thumbnails && image.pdfThumbnail))
+        if(image.attribute === attribute && !(no_pdf_thumbnails && image.pdfThumbnail)) {
             tempImages.push(image);
+        }
     });
     return tempImages;
 }
@@ -249,7 +250,7 @@ async function generateDownload(attribute) {
 
     // add images
     await Promise.all(imgs.map(async (img) => {
-        zip.file(img.filename, img.data.split(",")[1], {base64: true})
+        zip.file(img.filename, img.data.split(",")[1], {base64: true});
     }));
 
     // start download
