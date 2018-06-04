@@ -1,0 +1,44 @@
+{
+  "name": "malscc",
+  "version": "1.0.0",
+  "description": "Machine Learning Scan Classifier",
+  "main": "index.js",
+  "dependencies": {
+    "bootstrap": "^4.1.1",
+    "express": "^4.16.3",
+    "jquery": "^3.3.1",
+    "morgan": "^1.9.0",
+    "node-sass": "^4.9.0",
+    "nodemon": "^1.9.2",
+    "parallelshell": "^3.0.2",
+    "pdfassembler": "0.1.0-beta.6",
+    "popper.js": "^1.14.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babelify": "^8.0.0",
+    "browserify": "^16.2.2",
+    "jade": "^1.11.0",
+    "watchify": "^3.11.0"
+  },
+  "scripts": {
+    "build-css": "node-sass source/stylesheets/style.scss -o static/css",
+    "watch-css": "node-sass --watch source/stylesheets/style.scss -o static/css",
+    "build-js": "browserify source/js/malscc.js -o static/js/bundle.js -t [ babelify ]",
+    "watch-js": "watchify source/js/malscc.js -o static/js/bundle.js -t [ babelify ]",
+    "clean": "rm -rf static\\css && mkdir static\\css && rm -rf static\\js && mkdir static\\js && rm -rf static\\img && rm -rf static\\model-data && rm -rf dist",
+    "build": "npm run clean && npm run build-css && npm run build-js && cp -r source/img static/img && cp -r source/model-data static",
+    "build-static": "npm run build && mkdir dist && cp -r static/* dist && jade source/templates/index.jade -o dist && cp source/js/waitingDialog.js dist/js",
+    "watch": "parallelshell \"npm run watch-css\" \"npm run watch-js\" \"nodemon server -e js,jade\" \"cp -r source/img static/img\" \"cp -r source/model-data static\" \"cp source/js/waitingDialog.js static/js\"",
+    "start": "node server"
+  },
+  "keywords": [
+    "machine",
+    "learning"
+  ],
+  "author": "devsaur",
+  "license": "ISC"
+}

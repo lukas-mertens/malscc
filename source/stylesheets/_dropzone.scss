@@ -1,0 +1,13 @@
+.dropzone {
+    min-height: 150px;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    border-style: dashed;
+    border-color: rgba(91, 127, 166, 1);
+    padding: 20px 20px; 
+}
+
+#browseFiles {
+    position: fixed;
+    top: -100em;
+}

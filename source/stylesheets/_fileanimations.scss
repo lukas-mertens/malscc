@@ -1,0 +1,21 @@
+
+// animation-object when file was uploaded
+.animated-file {
+    display: block;
+    position: fixed;
+    top: 50%;
+    font-size: 300%;
+    color: $color_kashmir_blue_approx;
+    animation: file-uploaded 1.5s ease;
+}
+
+@keyframes file-uploaded {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0.5;
+        transform: translateY(80%);
+    }
+}
