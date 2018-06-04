@@ -1,4 +1,4 @@
-var PDFAssembler = require('pdfassembler').PDFAssembler;
+var PDFAssembler = require("pdfassembler").PDFAssembler;
 var model; 
 var currentFilter = "all";
 var images = [];
@@ -11,83 +11,13 @@ loadModel();
 jQuery.fn.extend({
     scrollToMe: function () {
         var x = jQuery(this).offset().top - 100;
-        jQuery('html,body').animate({ scrollTop: x }, 400);
+        jQuery("html,body").animate({ scrollTop: x }, 400);
     }
 });
 
-$(document).ready(function () {
-    // Check for the various File API support.
-    if (window.File && window.FileReader && window.FileList && window.Blob) {
-        var dropZone = document.getElementById('drop_zone');
-        dropZone.addEventListener('dragover', handleDragOver); // jQuery not used, because of dataTransfer
-        dropZone.addEventListener('drop', handleFileDropped);
-        $("#browseFiles").bind('change', handleFileBrowse);
-    } else {
-        alert('The File APIs are not fully supported in this browser.');
-    }
-
-    prepareDocument();
-
-    $(".startProcessing").click(function (e) {
-        e.preventDefault();
-        predictImages();
-    });
-
-    $(".filter-button").click(function () {
-        currentFilter = $(this).attr('data-filter');
-        updateImageFilterCache();
-        page = 0;
-    });
-
-    // previous page
-    $(".page-switcher.left").click(function() {
-        if(page>0) {
-            page--; 
-            updateShownImages();
-        }
-    });
-
-    // next page
-    $(".page-switcher.right").click(function() {
-        if((page+1)*imagesPerPage<currentFilterImages.length-1) {
-            page++; 
-            updateShownImages();
-        }
-    });
-
-    // switch category
-    $('#output-images-container .row').on("click", ".btn-switch-category", function () {
-        var self = $(this).closest('.galleryElement')
-        var imageObject = images.find(function(image) {
-            return image.uuid == self.data("uuid");
-        });
-        if(imageObject != undefined) {
-            if (self.hasClass("empty")) {
-                imageObject.attribute = "printed";
-            }
-            else if (self.hasClass("printed")) {
-                imageObject.attribute = "empty";
-            }
-        } else {
-            console.error("Image not found in DB!");
-        }
-        updateImageFilterCache();
-    });
-
-    // download printed images
-    $('#downloadPrinted').click(function () {
-        generateDownload("printed");
-    });
-
-    // download empty images
-    $('#downloadEmpty').click(function () {
-        generateDownload("empty");
-    });
-});
 
 // File Upload
 function handleFileDropped(evt) {
-    console.log("call!");
     evt.stopPropagation();
     evt.preventDefault();
     handleFileUpload(evt.dataTransfer.files); // FileList object
@@ -96,7 +26,7 @@ function handleFileDropped(evt) {
 function handleDragOver(evt) {
     evt.stopPropagation();
     evt.preventDefault();
-    evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+    evt.dataTransfer.dropEffect = "copy"; // Explicitly show this is a copy.
 }
 
 function handleFileBrowse(evt) {
@@ -106,20 +36,21 @@ function handleFileBrowse(evt) {
 }
 
 async function handleFileUpload(files) {
-    waitingDialog.show("processing files...")
+    waitingDialog.show("processing files...");
     await sleep(300);
 
     await Promise.all(Array.from(files).map(async (f) => {
-        if (f.type.match('image.*')) {
+        var data;
+        if (f.type.match("image.*")) {
             // process image-files
-            var data = await loadImage(f);
+            data = await loadImage(f);
             images.push({"data" : data, "attribute" : "unprocessed", "filename" : f.name, "pdfThumbnail" : false, "pdf_uuid" : "", "pdfPage" : 0, "uuid" : uuidv4()});
         }
-        else if (f.type.match('application/pdf')) {
+        else if (f.type.match("application/pdf")) {
             // process pdf files
-            var data = await loadPDF(f);
+            data = await loadPDF(f);
             var uuid = uuidv4(); // unique identifier for pdf
-            pdfFiles.push({"data" : data, "filename" : f.name, "uuid" : uuid})
+            pdfFiles.push({"data" : data, "filename" : f.name, "uuid" : uuid});
             await generatePDFThumbnails(data, f, uuid);
         }
         else {
@@ -147,7 +78,7 @@ async function thumbnailFromPage(pdf, pageNumber, file, pdf_uuid) {
     var page = await pdf.getPage(pageNumber);
     var viewport = page.getViewport(1); //scale 1
     var canvas = document.createElement("canvas");
-    var context = canvas.getContext('2d');
+    var context = canvas.getContext("2d");
     canvas.height = viewport.height;
     canvas.width = viewport.width;
     var renderContext = {
@@ -197,11 +128,11 @@ async function startFileAnimation() {
 }
 
 async function loadModel() {
-    model = await tf.loadModel('model-data/model.json');
+    model = await tf.loadModel("model-data/model.json");
 }
 
 async function predictImages() {
-    await waitingDialog.show('We are doing magic!');
+    await waitingDialog.show("We are doing magic!");
     await sleep(500);
     await Promise.all(images.map(async (image) => {
         await predictImage(image)
@@ -216,7 +147,7 @@ async function predictImage(image) {
     var img = tf.fromPixels(await PrepareImageForPrediction(image), 3);
     img = tf.cast(tf.expandDims(img), "float32"); // expand to rank 4 and cast to float
     const prediction = model.predict(img).dataSync()[0];
-    if (prediction == 0) {
+    if (prediction === 0) {
         image.attribute = "empty";
     } else {
         image.attribute = "printed";
@@ -279,14 +210,14 @@ function updateShownImages() {
 function getImagesWithAttribute(attribute, no_pdf_thumbnails = false) {
     var tempImages = [];
     images.forEach(image => {
-        if(image.attribute == attribute && !(no_pdf_thumbnails && image.pdfThumbnail))
+        if(image.attribute === attribute && !(no_pdf_thumbnails && image.pdfThumbnail))
             tempImages.push(image);
     });
     return tempImages;
 }
 
 function updateImageFilterCache() {
-    if(currentFilter == "all") {
+    if(currentFilter === "all") {
         currentFilterImages = images;
         $(".status-label").show();
     }
@@ -318,7 +249,7 @@ async function generateDownload(attribute) {
 
     // add images
     await Promise.all(imgs.map(async (img) => {
-        zip.file(img.filename, img.data.split(',')[1], {base64: true})
+        zip.file(img.filename, img.data.split(",")[1], {base64: true})
     }));
 
     // start download
@@ -348,7 +279,7 @@ async function generatePDFs(attribute) {
 function getThumbnailsOfPDF(pdf, attribute = "all") {
     var tempImages = [];
     images.forEach(image => {
-        if(image.pdfThumbnail && image.pdf_uuid == pdf.uuid && (image.attribute == attribute || attribute == "all"))
+        if(image.pdfThumbnail && image.pdf_uuid === pdf.uuid && (image.attribute === attribute || attribute === "all"))
             tempImages.push(image);
     });
     return tempImages;
@@ -392,3 +323,73 @@ function uuidv4() {
         (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
     )
 }
+
+$(document).ready(function () {
+    // Check for the various File API support.
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        var dropZone = document.getElementById("drop_zone");
+        dropZone.addEventListener("dragover", handleDragOver); // jQuery not used, because of dataTransfer
+        dropZone.addEventListener("drop", handleFileDropped);
+        $("#browseFiles").bind("change", handleFileBrowse);
+    } else {
+        alert("The File APIs are not fully supported in this browser.");
+    }
+
+    prepareDocument();
+
+    $(".startProcessing").click(function (e) {
+        e.preventDefault();
+        predictImages();
+    });
+
+    $(".filter-button").click(function () {
+        currentFilter = $(this).attr("data-filter");
+        updateImageFilterCache();
+        page = 0;
+    });
+
+    // previous page
+    $(".page-switcher.left").click(function() {
+        if(page>0) {
+            page--; 
+            updateShownImages();
+        }
+    });
+
+    // next page
+    $(".page-switcher.right").click(function() {
+        if((page+1)*imagesPerPage<currentFilterImages.length-1) {
+            page++; 
+            updateShownImages();
+        }
+    });
+
+    // switch category
+    $("#output-images-container .row").on("click", ".btn-switch-category", function () {
+        var self = $(this).closest(".galleryElement");
+        var imageObject = images.find(function(image) {
+            return image.uuid === self.data("uuid");
+        });
+        if(imageObject !== undefined) {
+            if (self.hasClass("empty")) {
+                imageObject.attribute = "printed";
+            }
+            else if (self.hasClass("printed")) {
+                imageObject.attribute = "empty";
+            }
+        } else {
+            console.error("Image not found in DB!");
+        }
+        updateImageFilterCache();
+    });
+
+    // download printed images
+    $("#downloadPrinted").click(function () {
+        generateDownload("printed");
+    });
+
+    // download empty images
+    $("#downloadEmpty").click(function () {
+        generateDownload("empty");
+    });
+});
