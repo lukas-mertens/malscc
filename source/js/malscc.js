@@ -44,7 +44,17 @@ async function handleFileUpload(files) {
         if (f.type.match("image.*")) {
             // process image-files
             data = await loadImage(f);
-            images.push({"data" : data, "attribute" : "unprocessed", "filename" : f.name, "pdfThumbnail" : false, "pdf_uuid" : "", "pdfPage" : 0, "uuid" : uuidv4()});
+            images.push(
+                {
+                    "data" : data, 
+                    "attribute" : "unprocessed", 
+                    "filename" : f.name, 
+                    "pdfThumbnail" : false, 
+                    "pdf_uuid" : "", 
+                    "pdfPage" : 0, 
+                    "uuid" : uuidv4()
+                }
+            );
         }
         else if (f.type.match("application/pdf")) {
             // process pdf files
@@ -87,7 +97,17 @@ async function thumbnailFromPage(pdf, pageNumber, file, pdf_uuid) {
     };
     await page.render(renderContext);
     var imageData = await canvas.toDataURL("image/jpeg");
-    await images.push({"data" : imageData, "attribute" : "unprocessed", "filename" : file.name + "_" + pageNumber, "pdfThumbnail" : true, "pdf_uuid" : pdf_uuid, "pdfPage" : pageNumber, "uuid" : uuidv4()});
+    await images.push(
+        {
+            "data" : imageData,
+            "attribute" : "unprocessed",
+            "filename" : file.name + "_" + pageNumber,
+            "pdfThumbnail" : true, 
+            "pdf_uuid" : pdf_uuid, 
+            "pdfPage" : pageNumber, 
+            "uuid" : uuidv4()
+        }
+    );
 }
 
 // load-async-functions
@@ -269,8 +289,11 @@ async function generatePDFs(attribute) {
         var pdf = await pdfAssemblerObj.pdfObject;
         const thumbnails = getThumbnailsOfPDF(f, attribute);
         var pages = pdf["/Root"]["/Pages"]["/Kids"];
-        pages = getSubArrayFromIndices(pages, thumbnails.map(a => a.pdfPage-1)); // keep only pages of category
+
+        // keep only pages of category
+        pages = getSubArrayFromIndices(pages, thumbnails.map(a => a.pdfPage-1)); 
         pdf["/Root"]["/Pages"]["/Kids"] = pages;
+
         await pdfAssemblerObj.removeRootEntries();
         out_pdfs.push(await pdfAssemblerObj.assemblePdf(f.filename));
     }));
@@ -280,7 +303,10 @@ async function generatePDFs(attribute) {
 function getThumbnailsOfPDF(pdf, attribute = "all") {
     var tempImages = [];
     images.forEach(image => {
-        if(image.pdfThumbnail && image.pdf_uuid === pdf.uuid && (image.attribute === attribute || attribute === "all"))
+        if(image.pdfThumbnail && 
+            image.pdf_uuid === pdf.uuid && 
+            (image.attribute === attribute || attribute === "all")
+        )
             tempImages.push(image);
     });
     return tempImages;
