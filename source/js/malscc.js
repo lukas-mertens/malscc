@@ -37,7 +37,7 @@ function handleFileBrowse(evt) {
 
 async function handleFileUpload(files) {
     waitingDialog.show("processing files...");
-    await sleep(300);
+    await sleep(400);
 
     await Promise.all(Array.from(files).map(async (f) => {
         var data;
@@ -165,7 +165,10 @@ async function predictImages() {
 
 async function predictImage(image) {
     var img = tf.fromPixels(await PrepareImageForPrediction(image), 3);
-    img = tf.cast(tf.expandDims(img), "float32"); // expand to rank 4 and cast to float
+    var rescaleFactor = tf.scalar(1)
+    // expand to rank 4, cast to float and rescale
+    img = tf.cast(tf.expandDims(img), "float32").mul(rescaleFactor); 
+    img.max().print();
     const prediction = model.predict(img).dataSync()[0];
     if (prediction === 0) {
         image.attribute = "empty";
@@ -194,7 +197,9 @@ async function prepareDocument() {
             <div class="galleryElement col-lg-4 col-md-4 col-sm-4 col-xs-6 filter unprocessed">
                 <img class="img-responsive-gallery px-2">
                 <div class="btn-switch-category-container">
-                    <button class="btn-switch-category"><i class="fa fa-exchange animated"></i></button>
+                    <button class="btn-switch-category">
+                        <i class="fa fa-exchange animated"></i>
+                    </button>
                 </div>
                 <div class="status-label">
                     <i class="fa fa-asterisk"></i>
@@ -354,7 +359,7 @@ function uuidv4() {
 $(document).ready(function () {
     // Check for the various File API support.
     if (window.File && window.FileReader && window.FileList && window.Blob) {
-        var dropZone = document.getElementById("drop_zone");
+        var dropZone = document.getElementById("dropZone");
         dropZone.addEventListener("dragover", handleDragOver); // jQuery not used, because of dataTransfer
         dropZone.addEventListener("drop", handleFileDropped);
         $("#browseFiles").bind("change", handleFileBrowse);

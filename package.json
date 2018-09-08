@@ -31,7 +31,7 @@
     "watch-js": "watchify source/js/malscc.js -o static/js/bundle.js -t [ babelify ]",
     "clean": "rm -rf static\\css && mkdir static\\css && rm -rf static\\js && mkdir static\\js && rm -rf static\\img && rm -rf static\\model-data && rm -rf dist",
     "build": "npm run clean && npm run build-css && npm run build-js && cp -r source/img static/img && cp -r source/model-data static",
-    "build-static": "npm run build && mkdir dist && cp -r static/* dist && jade source/templates/index.jade -o dist && cp source/js/waitingDialog.js dist/js",
+    "build-dist": "npm run build && mkdir dist && cp -r static/* dist && jade source/templates/index.jade -o dist && cp source/js/waitingDialog.js dist/js",
     "watch": "parallelshell \"npm run watch-css\" \"npm run watch-js\" \"nodemon server -e js,jade\" \"cp -r source/img static/img\" \"cp -r source/model-data static\" \"cp source/js/waitingDialog.js static/js\"",
     "start": "node server"
   },
