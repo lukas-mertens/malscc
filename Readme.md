@@ -1,5 +1,5 @@
 # MalSCC - Machine Learning Scan Classifier
-MalSCC is a tool to sort out empty pages from bulk scans. This repository contains the source code for the ![web-app](https://malscc.de). It uses a pre-trained artificial neural network to categorize the pages.
+MalSCC is a tool to sort out empty pages from bulk scans. This repository contains the source code for the [web-app](https://malscc.de). It uses a pre-trained artificial neural network to categorize the pages.
 
 ## How to build
 
