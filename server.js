@@ -1,9 +1,9 @@
-require("babel-polyfill");
+require("@babel/polyfill");
 
 var express = require("express")
   , logger = require("morgan")
   , app = express()
-  , template = require("jade").compileFile(__dirname + "/source/templates/index.jade");
+  , template = require("pug").compileFile(__dirname + "/source/templates/index.pug");
 
 var $ = require("jquery");
 
