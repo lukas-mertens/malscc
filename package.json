@@ -4,25 +4,25 @@
   "description": "Machine Learning Scan Classifier",
   "main": "index.js",
   "dependencies": {
-    "bootstrap": "^4.1.1",
-    "express": "^4.16.3",
-    "jquery": "^3.3.1",
-    "morgan": "^1.9.0",
-    "node-sass": "^4.9.0",
-    "nodemon": "^1.9.2",
+    "bootstrap": "^4.5.3",
+    "express": "^4.17.1",
+    "jquery": "^3.5.1",
+    "morgan": "^1.10.0",
+    "node-sass": "^4.14.1",
+    "nodemon": "^2.0.6",
     "parallelshell": "^3.0.2",
     "pdfassembler": "0.1.0-beta.6",
-    "popper.js": "^1.14.3"
+    "popper.js": "^1.16.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
     "babelify": "^8.0.0",
-    "browserify": "^16.2.2",
-    "jade": "^1.11.0",
-    "watchify": "^3.11.0"
+    "browserify": "^16.5.2",
+    "pug": "^3.0.0",
+    "watchify": "^3.11.1"
   },
   "scripts": {
     "build-css": "node-sass source/stylesheets/style.scss -o static/css",
@@ -31,8 +31,8 @@
     "watch-js": "watchify source/js/malscc.js -o static/js/bundle.js -t [ babelify ]",
     "clean": "rm -rf static\\css && mkdir static\\css && rm -rf static\\js && mkdir static\\js && rm -rf static\\img && rm -rf static\\model-data && rm -rf dist",
     "build": "npm run clean && npm run build-css && npm run build-js && cp -r source/img static/img && cp -r source/model-data static",
-    "build-dist": "npm run build && mkdir dist && cp -r static/* dist && jade source/templates/index.jade -o dist && cp source/js/waitingDialog.js dist/js",
-    "watch": "parallelshell \"npm run watch-css\" \"npm run watch-js\" \"nodemon server -e js,jade\" \"cp -r source/img static/img\" \"cp -r source/model-data static\" \"cp source/js/waitingDialog.js static/js\"",
+    "build-dist": "npm run build && mkdir dist && cp -r static/* dist && pug source/templates/index.pug -o dist && cp source/js/waitingDialog.js dist/js",
+    "watch": "parallelshell \"npm run watch-css\" \"npm run watch-js\" \"nodemon server -e js,pug\" \"cp -r source/img static/img\" \"cp -r source/model-data static\" \"cp source/js/waitingDialog.js static/js\"",
     "start": "node server"
   },
   "keywords": [
