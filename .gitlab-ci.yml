@@ -3,11 +3,17 @@ image: node:latest
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
 
-test:
+build:
+  before_script:
+    - npm install
   script:
-  - npm run build
-  except:
-  - master
+  - npm run build-dist
+  - mv dist public
+  rules:
+    - if: $CI_COMMIT_BRANCH != "master"
+  artifacts:
+    paths:
+    - public
 
 pages:
   before_script:
@@ -15,6 +21,8 @@ pages:
   script:
     - npm run build-dist
     - mv dist public
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
   artifacts:
     paths:
     - public
