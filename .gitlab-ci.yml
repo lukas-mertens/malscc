@@ -1,0 +1,20 @@
+image: node:latest
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+test:
+  script:
+  - npm run build
+  except:
+  - master
+
+pages:
+  before_script:
+    - npm install
+  script:
+    - npm run build-dist
+    - mv dist public
+  artifacts:
+    paths:
+    - public
