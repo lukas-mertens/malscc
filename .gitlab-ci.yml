@@ -3,7 +3,7 @@ image: node:latest
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
 
-build:
+test_build:
   before_script:
     - npm install
   script:
