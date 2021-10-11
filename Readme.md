@@ -11,3 +11,8 @@ The output files are going to be generated in the ```dist``` directory.
 ## Contributing
 
 Run ```npm run watch``` to start the local development server.
+
+
+## Additional info
+
+I wrote a paper about this project. You can find it [here](https://www.hans-riegel-fachpreise.com/fileadmin/hans-riegel-fachpreise/Module/ausgezeichnete-arbeiten/hans-riegel-fachpreise-seminararbeit-vwa-2018-mertens.pdf).
