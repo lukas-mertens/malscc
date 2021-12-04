@@ -4,7 +4,7 @@
   "description": "Machine Learning Scan Classifier",
   "main": "index.js",
   "dependencies": {
-    "bootstrap": "4.6.0",
+    "bootstrap": "4.6.1",
     "express": "4.17.1",
     "jquery": "3.6.0",
     "morgan": "1.10.0",
