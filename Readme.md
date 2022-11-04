@@ -5,7 +5,7 @@ MalSCC is a tool to sort out empty pages from bulk scans. This repository contai
 
 First execute ```npm install``` to install the required dependencies.
 
-To build the static files for a minimal webserver execute ```npm run build-static```.
+To build the static files for a minimal webserver execute ```npm run build-dist```.
 The output files are going to be generated in the ```dist``` directory. 
 
 ## Contributing
