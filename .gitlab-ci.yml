@@ -1,4 +1,4 @@
-image: node:latest
+image: node:18
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
